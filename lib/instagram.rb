@@ -9,8 +9,8 @@ module Instagram
   
 	#ugly hack, need to write initialize function
 	Login_params = {
-								 'username'  => 'xxxxxx',
-								 'password'  => 'xxxxxxx',
+								 'username'  => 'blank',
+								 'password'  => 'blank',
 								 'device_id' => '00000000'
   }
 
@@ -35,12 +35,10 @@ module Instagram
     parse_response(url, params, options.fetch(:parse_with, UserWrap))
   end
 
-	#Would be nice to pass in a flag to see if it was POST
-	#and refact to only one set of parse_response/get_url maybe
-	def search_users(query, params = {}, options {})
-		params = {:query => query}.merge(params)}
-		parse_post_response(SearchUsers.dup, params,options.fetch(:parse_with, UserWrap))
-	end
+	def search_users(query, params = {}, options = {})
+		params = {:query => query}.merge(params)
+		parse_post_response(SearchUsers.dup, params, options.fetch(:parse_with, UserSearchWrap))
+  end
   
   def search_tags(query, params = {}, options = {})
     params = {:q => query}.merge(params)
@@ -72,10 +70,10 @@ module Instagram
     end
   end
 
-  def parse_post_response(url, params)
+  def parse_post_response(url, params, parser = nil)
 		@cookie ||= login_user
-    body = post_url(url, params,cookie)
-    parser ? parser.parse(body) : body
+    body = post_url(url, params,@cookie)
+    #parser ? parser.parse(body) : body
   end
 
 	def post_url(url, params,cookie)

@@ -7,12 +7,21 @@ module Instagram
     # `pk` is such a dumb property name
     element 'pk' => :id
   end
-  
-  class User < Base
+
+  class UserSearch < Base
+
     element :username
     element :full_name
     element 'profile_pic_url' => :avatar_url
     alias avatar avatar_url # `avatar` is deprecated
+
+    def ==(other)
+      UserSearch === other and other.id == self.id
+    end
+
+  end
+  
+  class FullUser < UserSearch
     
     # extended info
     element :media_count
@@ -21,13 +30,15 @@ module Instagram
     element :follower_count
     alias followers follower_count # `followers` will return an array of users in future!
     
-    def ==(other)
-      User === other and other.id == self.id
-    end
   end
-  
+
+  class UserSearchWrap < NibblerJSON
+    element :users, :with => UserSearch
+    def parse() super.users end
+  end
+
   class UserWrap < NibblerJSON
-    element :user, :with => User
+    element :user, :with => FullUser
     # return user instead of self when done
     def parse() super.user end
   end
@@ -44,10 +55,10 @@ module Instagram
     # timestamp of when the picture was taken
     element :taken_at, :with => lambda { |sec| Time.at(sec) }
     # user who uploaded the media
-    element :user, :with => User
+    element :user, :with => FullUser
     
     # array of people who liked this media
-    elements :likers, :with => User
+    elements :likers, :with => FullUser
     # user IDs of people who liked this (only if "likers" are not present)
     element :liker_ids
     
@@ -62,7 +73,7 @@ module Instagram
       # comment body
       element :text
       # comment author
-      element :user, :with => User
+      element :user, :with => FullUser
     end
     
     elements 'image_versions' => :images, :with => NibblerJSON do
