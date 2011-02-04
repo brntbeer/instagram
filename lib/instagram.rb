@@ -37,8 +37,8 @@ module Instagram
 
 	#Would be nice to pass in a flag to see if it was POST
 	#and refact to only one set of parse_response/get_url maybe
-	def search_users(query, params = {}, options {})
-		params = {:query => query}.merge(params)}
+	def search_users(query, params = {}, options = {})
+		params = {:query => query}.merge(params)
 		#SearchUsersResults needs built, todo
 		parse_post_response(SearchUsers.dup, params)# options.fetch(:parse_with,SearchUsersResults))
 	end
