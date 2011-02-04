@@ -17,7 +17,7 @@ module Instagram
   Popular = Addressable::URI.parse 'http://instagr.am/api/v1/feed/popular/'
   UserFeed = Addressable::Template.new 'http://instagr.am/api/v1/feed/user/{user_id}/'
   UserInfo = Addressable::Template.new 'http://instagr.am/api/v1/users/{user_id}/info/'
-	SearchUsers = Addressable::URI.parse 'http://instagr.am/api/v1/users/search/'
+  SearchUsers = Addressable::URI.parse 'http://instagr.am/api/v1/users/search/'
   SearchTags = Addressable::URI.parse 'http://instagr.am/api/v1/tags/search/'
   TagFeed = Addressable::Template.new 'http://instagr.am/api/v1/feed/tag/{tag}/'
   
