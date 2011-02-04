@@ -159,5 +159,5 @@ module Instagram
     # return items instead of self when done
     def parse() super.items end
   end
-  
+
 end

@@ -39,8 +39,7 @@ module Instagram
 	#and refact to only one set of parse_response/get_url maybe
 	def search_users(query, params = {}, options {})
 		params = {:query => query}.merge(params)}
-		#SearchUsersResults needs built, todo
-		parse_post_response(SearchUsers.dup, params)# options.fetch(:parse_with,SearchUsersResults))
+		parse_post_response(SearchUsers.dup, params,options.fetch(:parse_with, UserWrap))
 	end
   
   def search_tags(query, params = {}, options = {})
@@ -74,9 +73,9 @@ module Instagram
   end
 
   def parse_post_response(url, params)
-		cookie = login_user
+		@cookie ||= login_user
     body = post_url(url, params,cookie)
-    #parser ? parser.parse(body) : body
+    parser ? parser.parse(body) : body
   end
 
 	def post_url(url, params,cookie)
@@ -102,7 +101,7 @@ module Instagram
 		request.set_form_data(Login_params)
 		response = http.request(request)
 
-		cookie = response['set-cookie']
+		response['set-cookie']
 	end
   
 end
