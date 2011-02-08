@@ -7,11 +7,11 @@ module Instagram
   
   extend self
   
-	#ugly hack, need to write initialize function
-	Login_params = {
-								 'username'  => 'blank',
-								 'password'  => 'blank',
-								 'device_id' => '00000000'
+  #ugly hack, need to write initialize function
+  Login_params = {
+                 'username'  => 'blank',
+                 'password'  => 'blank',
+                 'device_id' => '00000000'
   }
 
   Popular = Addressable::URI.parse 'http://instagr.am/api/v1/feed/popular/'
@@ -35,9 +35,9 @@ module Instagram
     parse_response(url, params, options.fetch(:parse_with, UserWrap))
   end
 
-	def search_users(query, params = {}, options = {})
-		params = {:query => query}.merge(params)
-		parse_post_response(SearchUsers.dup, params, options.fetch(:parse_with, UserSearchWrap))
+  def search_users(query, params = {}, options = {})
+    params = {:query => query}.merge(params)
+    parse_post_response(SearchUsers.dup, params, options.fetch(:parse_with, UserSearchWrap))
   end
   
   def search_tags(query, params = {}, options = {})
@@ -71,35 +71,35 @@ module Instagram
   end
 
   def parse_post_response(url, params, parser = nil)
-		@cookie ||= login_user
+    @cookie ||= login_user
     body = post_url(url, params,@cookie)
     #parser ? parser.parse(body) : body
   end
 
-	def post_url(url, params,cookie)
-		http = Net::HTTP.new(url.host, url.port)
-		request = Net::HTTP::Post.new(url.request_uri)
-		request['Cookie'] = cookie
-		request['User-agent'] = "Instagram Ruby client"
-		request.set_form_data(params)
-		response = http.request(request)
+  def post_url(url, params,cookie)
+    http = Net::HTTP.new(url.host, url.port)
+    request = Net::HTTP::Post.new(url.request_uri)
+    request['Cookie'] = cookie
+    request['User-agent'] = "Instagram Ruby client"
+    request.set_form_data(params)
+    response = http.request(request)
 
-		if Net::HTTPSuccess === response
-			response.body
-		else
-			response.error!
-		end
-	end
+    if Net::HTTPSuccess === response
+      response.body
+    else
+      response.error!
+    end
+  end
 
-	def login_user
-		uri = Addressable::URI.parse 'https://instagr.am/api/v1/accounts/login/'
-		http = Net::HTTP.new(uri.host, uri.port)
-		request = Net::HTTP::Post.new(uri.request_uri)
-		request['User-agent'] = "Instagram Ruby client"
-		request.set_form_data(Login_params)
-		response = http.request(request)
+  def login_user
+    uri = Addressable::URI.parse 'https://instagr.am/api/v1/accounts/login/'
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request['User-agent'] = "Instagram Ruby client"
+    request.set_form_data(Login_params)
+    response = http.request(request)
 
-		response['set-cookie']
-	end
+    response['set-cookie']
+  end
   
 end
